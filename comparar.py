@@ -1,59 +1,88 @@
 import tkinter as tk
 from tkinter import filedialog, messagebox
-import difflib
+
+archivo1 = None
+archivo2 = None
+
+def seleccionar_archivo1():
+    global archivo1
+    archivo1 = filedialog.askopenfilename(title="Seleccionar archivo 1", filetypes=(("Archivos de texto", "*"),))
+
+def seleccionar_archivo2():
+    global archivo2
+    archivo2 = filedialog.askopenfilename(title="Seleccionar archivo 2", filetypes=(("Archivos de texto", "*"),))
 
 def comparar_archivos():
-    archivo1 = filedialog.askopenfilename(title="Seleccionar archivo 1", filetypes=(("Archivos de texto", "*.txt"),))
-    archivo2 = filedialog.askopenfilename(title="Seleccionar archivo 2", filetypes=(("Archivos de texto", "*.txt"),))
+    if archivo1 is None or archivo2 is None:
+        messagebox.showerror("Error", "Debes seleccionar ambos archivos.")
+        return
 
-    if archivo1 and archivo2:
-        texto1 = ""
-        texto2 = ""
+    lineas1 = []
+    lineas2 = []
 
-        with open(archivo1, 'r') as f1, open(archivo2, 'r') as f2:
-            texto1 = f1.read()
-            texto2 = f2.read()
+    with open(archivo1, 'r') as f1, open(archivo2, 'r') as f2:
+        lineas1 = [linea.strip() for linea in f1 if linea.startswith('551')]
+        lineas2 = [linea.strip() for linea in f2 if linea.startswith('551')]
 
-        diferencias = difflib.ndiff(texto1.splitlines(), texto2.splitlines())
-        resultado = list(diferencias)
-        diff_output = '\n'.join(resultado)
+    cantidad_lineas1 = len(lineas1)
+    cantidad_lineas2 = len(lineas2)
 
-        cantidad_diferencias = sum(1 for linea in resultado if linea.startswith('- ') or linea.startswith('+ '))
-        if cantidad_diferencias > 0:
-            mostrar_diferencias(diff_output, cantidad_diferencias)
-        else:
-            messagebox.showinfo("Comparación de archivos", "No se encontraron diferencias.")
+    messagebox.showinfo("Comparación de archivos", f"Archivo 1 tiene {cantidad_lineas1} líneas que inician con '551'.\nArchivo 2 tiene {cantidad_lineas2} líneas que inician con '551'.")
 
-def mostrar_diferencias(diferencias, cantidad):
+    diferencias = []
+
+    for i, (linea1, linea2) in enumerate(zip(lineas1, lineas2)):
+        if linea1 != linea2:
+            diferencias.append((i + 1, linea1, linea2))
+
+    if len(diferencias) == 0:
+        messagebox.showinfo("Comparación de archivos", "No se encontraron diferencias entre las líneas que inician con '551'.")
+        return
+
+    mostrar_diferencias(diferencias)
+
+def mostrar_diferencias(diferencias):
     ventana = tk.Toplevel()
-    ventana.title("Diferencias entre archivos")
+    ventana.title("Diferencias entre líneas que inician con 551")
     ventana.geometry("800x400")
 
-    texto_diferencias = tk.Text(ventana)
+    # Crear el widget de desplazamiento vertical
+    scroll_y = tk.Scrollbar(ventana)
+    scroll_y.pack(side=tk.RIGHT, fill=tk.Y)
+
+    texto_diferencias = tk.Text(ventana, yscrollcommand=scroll_y.set)
     texto_diferencias.pack(fill=tk.BOTH, expand=True)
 
-    # Mostrar diferencias subrayadas
-    texto_diferencias.insert(tk.END, diferencias)
-    for i, linea in enumerate(diferencias.splitlines()):
-        if linea.startswith('+'):
-            texto_diferencias.tag_add("agregado", f"{i+1}.0", f"{i+1}.end")
-            texto_diferencias.tag_config("agregado", background="lightgreen")
-        elif linea.startswith('-'):
-            texto_diferencias.tag_add("eliminado", f"{i+1}.0", f"{i+1}.end")
-            texto_diferencias.tag_config("eliminado", background="pink")
+    # Configurar la barra de desplazamiento
+    scroll_y.config(command=texto_diferencias.yview)
 
-    messagebox.showinfo("Comparación de archivos", f"Se encontraron {cantidad} diferencias.")
+    # Mostrar las diferencias línea por línea
+    for linea, linea1, linea2 in diferencias:
+        texto_diferencias.insert(tk.END, f"Línea {linea}:\n")
+        texto_diferencias.insert(tk.END, f"Archivo 1: {linea1}\n", "archivo1")
+        texto_diferencias.insert(tk.END, f"Archivo 2: {linea2}\n", "archivo2")
+        texto_diferencias.insert(tk.END, "\n")
+
+    # Configurar el estilo del texto
+    texto_diferencias.tag_config("archivo1", background="lightgreen")
+    texto_diferencias.tag_config("archivo2", background="pink")
 
     ventana.mainloop()
 
 # Crear la ventana principal
 ventana = tk.Tk()
-ventana.title("Comparador de archivos")
-ventana.geometry("300x150")
+ventana.title("Comparador de líneas que inician con 551")
+ventana.geometry("300x200")
 
-# Botón para seleccionar archivos
-boton_seleccionar = tk.Button(ventana, text="Seleccionar archivos", command=comparar_archivos)
-boton_seleccionar.pack(pady=20)
+# Botones para seleccionar archivos
+boton_seleccionar1 = tk.Button(ventana, text="Seleccionar archivo 1", command=seleccionar_archivo1)
+boton_seleccionar1.pack(pady=10)
+
+boton_seleccionar2 = tk.Button(ventana, text="Seleccionar archivo 2", command=seleccionar_archivo2)
+boton_seleccionar2.pack(pady=10)
+
+boton_comparar = tk.Button(ventana, text="Comparar archivos", command=comparar_archivos)
+boton_comparar.pack(pady=10)
 
 # Ejecutar la interfaz
 ventana.mainloop()
