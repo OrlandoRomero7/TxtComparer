@@ -1,5 +1,103 @@
 import tkinter as tk
+import customtkinter as ctk
+from PIL import Image
 from tkinter import filedialog, messagebox
+# --Create the main window# ------------------------------------------------------------------------------
+window = ctk.CTk()
+window.title("My Application")
+window.geometry("800x475")
+# window.configure(bg="#4D5057")
+window.resizable(False, False)
+# ------------------------------------------------------------------------------
+
+frame = ctk.CTkFrame(window, width=800, height=475, fg_color="#4D5057")
+frame.place(x=0, y=0)
+
+# --ENCABEZADO------------------------------------------------------------------
+# Create two labels
+label1 = ctk.CTkLabel(window, text="TXT", fg_color="#4D5057",
+                      text_color="#A5DE37", font=("Cascadia Code", 20, "bold"))
+label2 = ctk.CTkLabel(window, text="Comparer", fg_color="#4D5057",
+                      text_color="white", font=("Cascadia Code", 20, "bold"))
+
+window.update()  # Render the window
+
+# Compute label coordinates
+x_center = window.winfo_width() // 2
+y_center = window.winfo_height() // 2  # 20 pixels below the top
+# Place the labels
+label1.place(x=x_center - label1.winfo_reqwidth(), y=10)
+label2.place(x=x_center, y=10)
+# ------------------------------------------------------------------------------
+
+
+def close_app():
+    window.destroy()
+# ----------------------------------------------------------------------------
+
+
+raw_add_first_icon = Image.open(
+    r'assets/icons/AGREGAR1.png')
+
+add_first_width, add_first_height = 80, 90
+resized_add_first_icon = raw_add_first_icon.resize(
+    (add_first_width, add_first_height))
+converted_add_first_icon = ctk.CTkImage(resized_add_first_icon, size=(60, 60))
+
+
+add_first_icon = ctk.CTkLabel(window, image=converted_add_first_icon,
+                              text=None, fg_color="#4D5057")
+add_first_icon.place(x=x_center-260, y=y_center-40)
+
+
+# ----------------------------------------------------------------------------
+
+
+separator = ctk.CTkFrame(window, width=115, height=2, fg_color="#787c7f")
+separator.place(x=x_center-154, y=y_center-10)
+
+
+# # ----------------------------------------------------------------------------
+raw_add_second_icon = Image.open(
+    r'assets/icons/AGREGAR2.png')
+
+add_second_width, add_second_height = 80, 90
+resized_add_second_icon = raw_add_second_icon.resize(
+    (add_second_width, add_second_height))
+converted_add_second_icon = ctk.CTkImage(
+    resized_add_second_icon, size=(60, 60))
+
+
+add_second_icon = ctk.CTkLabel(window, image=converted_add_second_icon,
+                               text=None, fg_color="#4D5057")
+add_second_icon.place(x=x_center, y=y_center-40)
+
+
+# ----------------------------------------------------------------------------
+
+second_separator = ctk.CTkFrame(
+    window, width=115, height=2, fg_color="#787c7f")
+second_separator.place(x=x_center+100, y=y_center-10)
+
+# ----------------------------------------------------------------------------
+
+
+raw_generate_icon = Image.open(
+    r'assets/icons/COMPARAR.png')
+
+generate_width, generate_height = 80, 90
+resized_generate_icon = raw_generate_icon.resize(
+    (generate_width, generate_height))
+converted_generate_icon = ctk.CTkImage(
+    resized_generate_icon, size=(60, 60))
+
+
+generate_icon = ctk.CTkLabel(window, image=converted_generate_icon,
+                             text=None, fg_color="#4D5057")
+generate_icon.place(x=x_center+245, y=y_center-40)
+
+#Funciones para seleccionar los archivos 
+#-----------------------------------------------------------------------------
 
 archivo1 = None
 archivo2 = None
@@ -11,7 +109,8 @@ def seleccionar_archivo1():
 def seleccionar_archivo2():
     global archivo2
     archivo2 = filedialog.askopenfilename(title="Seleccionar archivo 2", filetypes=(("Archivos de texto", "*"),))
-
+#------------------------------------------------------------------------------
+#Funciones para comparar
 def comparar_archivos():
     if archivo1 is None or archivo2 is None:
         messagebox.showerror("Error", "Debes seleccionar ambos archivos.")
@@ -68,21 +167,28 @@ def mostrar_diferencias(diferencias):
     texto_diferencias.tag_config("archivo2", background="pink")
 
     ventana.mainloop()
+# ----------------------------------------------------------------------------   
+#Botones
+# ----------------------------------------------------------------------------
+select_file1_button = ctk.CTkButton(
+    window, text="Archivo 1", command=seleccionar_archivo1, bg_color="#4D5057", corner_radius=7, font=("Segoe UI", 15), width=114)
+select_file1_button.place(x=x_center-287, y=y_center+50)
 
-# Crear la ventana principal
-ventana = tk.Tk()
-ventana.title("Comparador de líneas que inician con 551")
-ventana.geometry("300x200")
+# ----------------------------------------------------------------------------
+# ----------------------------------------------------------------------------
+select_file2_button = ctk.CTkButton(
+    window, text="Archivo 2", command=seleccionar_archivo2, bg_color="#4D5057", corner_radius=7, font=("Segoe UI", 15), width=114)
+select_file2_button.place(x=x_center-26, y=y_center+50)
 
-# Botones para seleccionar archivos
-boton_seleccionar1 = tk.Button(ventana, text="Seleccionar archivo 1", command=seleccionar_archivo1)
-boton_seleccionar1.pack(pady=10)
 
-boton_seleccionar2 = tk.Button(ventana, text="Seleccionar archivo 2", command=seleccionar_archivo2)
-boton_seleccionar2.pack(pady=10)
+# ----------------------------------------------------------------------------
+# ----------------------------------------------------------------------------
+compare_button = ctk.CTkButton(
+    window, text="Comparar", command=comparar_archivos, bg_color="#4D5057", corner_radius=7, font=("Segoe UI", 15), width=114)
 
-boton_comparar = tk.Button(ventana, text="Comparar archivos", command=comparar_archivos)
-boton_comparar.pack(pady=10)
+compare_button.place(x=x_center+221, y=y_center+50)
 
-# Ejecutar la interfaz
-ventana.mainloop()
+# ----------------------------------------------------------------------------
+
+# Start the main application loop
+window.mainloop()
