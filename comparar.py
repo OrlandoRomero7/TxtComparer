@@ -100,9 +100,10 @@ generate_icon.place(x=x_center+245, y=y_center-40)
 
 # Funciones para seleccionar los archivos
 # -----------------------------------------------------------------------------
-rchivo1 = None
+archivo1 = None
 archivo2 = None
-
+grupos1 = defaultdict(list)
+grupos2 = defaultdict(list)
 
 def seleccionar_archivo1():
     global archivo1
@@ -128,12 +129,12 @@ def comparar_archivos():
         for linea in f1:
             if linea.startswith('551'):
                 datos = linea.strip().split('|')
-                grupos1[datos[2]].append(linea.strip())
+                grupos1[datos[1]].append(linea.strip())
 
         for linea in f2:
             if linea.startswith('551'):
                 datos = linea.strip().split('|')
-                grupos2[datos[2]].append(linea.strip())
+                grupos2[datos[1]].append(linea.strip())
 
     diferencias = []
 
