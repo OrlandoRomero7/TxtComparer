@@ -2,6 +2,8 @@ import tkinter as tk
 import customtkinter as ctk
 from PIL import Image
 from tkinter import filedialog, messagebox
+from collections import defaultdict
+from itertools import zip_longest
 # --Create the main window# ------------------------------------------------------------------------------
 window = ctk.CTk()
 window.title("My Application")
@@ -96,66 +98,71 @@ generate_icon = ctk.CTkLabel(window, image=converted_generate_icon,
                              text=None, fg_color="#4D5057")
 generate_icon.place(x=x_center+245, y=y_center-40)
 
-#Funciones para seleccionar los archivos 
-#-----------------------------------------------------------------------------
-
-archivo1 = None
+# Funciones para seleccionar los archivos
+# -----------------------------------------------------------------------------
+rchivo1 = None
 archivo2 = None
+
 
 def seleccionar_archivo1():
     global archivo1
-    archivo1 = filedialog.askopenfilename(title="Seleccionar archivo 1", filetypes=(("Archivos de texto", "*"),))
+    archivo1 = filedialog.askopenfilename(
+        title="Seleccionar archivo 1", filetypes=(("Archivos de texto", "*"),))
+
 
 def seleccionar_archivo2():
     global archivo2
-    archivo2 = filedialog.askopenfilename(title="Seleccionar archivo 2", filetypes=(("Archivos de texto", "*"),))
-#------------------------------------------------------------------------------
+    archivo2 = filedialog.askopenfilename(
+        title="Seleccionar archivo 2", filetypes=(("Archivos de texto", "*"),))
 
-ocurrencias_adicionales = []
 
-#Funciones para comparar
 def comparar_archivos():
     if archivo1 is None or archivo2 is None:
         messagebox.showerror("Error", "Debes seleccionar ambos archivos.")
         return
-
-    lineas1 = []
-    lineas2 = []
+    global grupos1, grupos2
+    grupos1 = defaultdict(list)
+    grupos2 = defaultdict(list)
 
     with open(archivo1, 'r') as f1, open(archivo2, 'r') as f2:
-        lineas1 = [linea.strip() for linea in f1 if linea.startswith('551')]
-        lineas2 = [linea.strip() for linea in f2 if linea.startswith('551')]
+        for linea in f1:
+            if linea.startswith('551'):
+                datos = linea.strip().split('|')
+                grupos1[datos[2]].append(linea.strip())
 
-    cantidad_lineas1 = len(lineas1)
-    cantidad_lineas2 = len(lineas2)
-
-    messagebox.showinfo("Comparación de archivos", f"Archivo 1 tiene {cantidad_lineas1} líneas que inician con '551'.\nArchivo 2 tiene {cantidad_lineas2} líneas que inician con '551'.")
+        for linea in f2:
+            if linea.startswith('551'):
+                datos = linea.strip().split('|')
+                grupos2[datos[2]].append(linea.strip())
 
     diferencias = []
 
-    for i, (linea1, linea2) in enumerate(zip(lineas1, lineas2)):
-        if linea1 != linea2:
-            diferencias.append((i + 1, linea1, linea2))
+    for clave in set(grupos1.keys()) | set(grupos2.keys()):
+        if clave in grupos1 and clave in grupos2:
+            if grupos1[clave] != grupos2[clave]:
+                diferencias.append((clave, grupos1[clave], grupos2[clave]))
+        elif clave in grupos1:
+            diferencias.append((clave, grupos1[clave], []))
+        else:
+            diferencias.append((clave, [], grupos2[clave])
+                               ) if clave in grupos2 else None
 
-    ocurrencias_adicionales1 = lineas1[len(diferencias):]
-    ocurrencias_adicionales2 = lineas2[len(diferencias):]
+    grupos_restantes1 = [
+        grupo for grupo in grupos1.keys() if grupo not in grupos2]
+    grupos_restantes2 = [
+        grupo for grupo in grupos2.keys() if grupo not in grupos1]
 
-    if ocurrencias_adicionales1:
-        ocurrencias_adicionales.append(("Archivo 1", ocurrencias_adicionales1))
-
-    if ocurrencias_adicionales2:
-        ocurrencias_adicionales.append(("Archivo 2", ocurrencias_adicionales2))
-
-
-    if len(diferencias) == 0:
-        messagebox.showinfo("Comparación de archivos", "No se encontraron diferencias entre las líneas que inician con '551'.")
+    if len(diferencias) == 0 and len(grupos_restantes1) == 0 and len(grupos_restantes2) == 0:
+        messagebox.showinfo("Comparación de archivos",
+                            "No se encontraron diferencias entre las líneas que inician con '551'.")
         return
 
-    mostrar_diferencias(diferencias)
+    mostrar_diferencias(diferencias, grupos_restantes1, grupos_restantes2)
 
-def mostrar_diferencias(diferencias):
+
+def mostrar_diferencias(diferencias, grupos_restantes1, grupos_restantes2):
     ventana = tk.Toplevel()
-    ventana.title("Diferencias entre líneas que inician con 551")
+    ventana.title("Diferencias entre grupos de líneas que inician con 551")
     ventana.geometry("800x400")
 
     # Crear el widget de desplazamiento vertical
@@ -168,28 +175,45 @@ def mostrar_diferencias(diferencias):
     # Configurar la barra de desplazamiento
     scroll_y.config(command=texto_diferencias.yview)
 
-    # Mostrar las diferencias línea por línea
-    for linea, linea1, linea2 in diferencias:
-        texto_diferencias.insert(tk.END, f"Línea {linea}:\n")
-        texto_diferencias.insert(tk.END, f"Archivo 1: {linea1}\n", "archivo1")
-        texto_diferencias.insert(tk.END, f"Archivo 2: {linea2}\n", "archivo2")
+    # Mostrar las diferencias grupo por grupo
+    for clave, grupo1, grupo2 in diferencias:
+        texto_diferencias.insert(tk.END, f"Grupo {clave}:\n")
+        texto_diferencias.insert(tk.END, "Archivo 1:\n")
+        for linea in grupo1:
+            texto_diferencias.insert(tk.END, f"{linea}\n")
+        texto_diferencias.insert(tk.END, "Archivo 2:\n")
+        for linea in grupo2:
+            texto_diferencias.insert(tk.END, f"{linea}\n")
         texto_diferencias.insert(tk.END, "\n")
 
-    # Mostrar las ocurrencias adicionales en rojo
-    for archivo, ocurrencias in ocurrencias_adicionales:
-        texto_diferencias.insert(tk.END, f"Ocurrencias adicionales en {archivo}:\n")
-        for ocurrencia in ocurrencias:
-            texto_diferencias.insert(tk.END, f"{ocurrencia}\n", "ocurrencia_adicional")
+    # Mostrar los grupos restantes del archivo 1
+    if grupos_restantes1:
+        texto_diferencias.insert(tk.END, "Grupos restantes en archivo 1:\n")
+        for grupo in grupos_restantes1:
+            texto_diferencias.insert(tk.END, f"Grupo {grupo}:\n")
+            for linea in grupos1[grupo]:
+                texto_diferencias.insert(tk.END, f"{linea}\n")
+            texto_diferencias.insert(tk.END, "\n")
+
+    # Mostrar los grupos restantes del archivo 2
+    if grupos_restantes2:
+        texto_diferencias.insert(tk.END, "Grupos restantes en archivo 2:\n")
+        for grupo in grupos_restantes2:
+            texto_diferencias.insert(tk.END, f"Grupo {grupo}:\n")
+            for linea in grupos2[grupo]:
+                texto_diferencias.insert(tk.END, f"{linea}\n")
+            texto_diferencias.insert(tk.END, "\n")
 
     # Configurar el estilo del texto
-    texto_diferencias.tag_config("archivo1", background="lightgreen")
-    texto_diferencias.tag_config("archivo2", background="pink")
-    texto_diferencias.tag_config("ocurrencia_adicional", background="#CBD0E2")
-    
+    # texto_diferencias.tag_config("archivo1", background="lightgreen")
+    # texto_diferencias.tag_config("archivo2", background="pink")
+    # texto_diferencias.tag_config("ocurrencia_adicional", background="#CBD0E2")
 
     ventana.mainloop()
-# ----------------------------------------------------------------------------   
-#Botones
+
+
+# ----------------------------------------------------------------------------
+# Botones
 # ----------------------------------------------------------------------------
 select_file1_button = ctk.CTkButton(
     window, text="Archivo 1", command=seleccionar_archivo1, bg_color="#4D5057", corner_radius=7, font=("Segoe UI", 15), width=114)
