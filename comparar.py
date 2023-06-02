@@ -110,6 +110,9 @@ def seleccionar_archivo2():
     global archivo2
     archivo2 = filedialog.askopenfilename(title="Seleccionar archivo 2", filetypes=(("Archivos de texto", "*"),))
 #------------------------------------------------------------------------------
+
+ocurrencias_adicionales = []
+
 #Funciones para comparar
 def comparar_archivos():
     if archivo1 is None or archivo2 is None:
@@ -133,6 +136,16 @@ def comparar_archivos():
     for i, (linea1, linea2) in enumerate(zip(lineas1, lineas2)):
         if linea1 != linea2:
             diferencias.append((i + 1, linea1, linea2))
+
+    ocurrencias_adicionales1 = lineas1[len(diferencias):]
+    ocurrencias_adicionales2 = lineas2[len(diferencias):]
+
+    if ocurrencias_adicionales1:
+        ocurrencias_adicionales.append(("Archivo 1", ocurrencias_adicionales1))
+
+    if ocurrencias_adicionales2:
+        ocurrencias_adicionales.append(("Archivo 2", ocurrencias_adicionales2))
+
 
     if len(diferencias) == 0:
         messagebox.showinfo("Comparación de archivos", "No se encontraron diferencias entre las líneas que inician con '551'.")
@@ -162,9 +175,17 @@ def mostrar_diferencias(diferencias):
         texto_diferencias.insert(tk.END, f"Archivo 2: {linea2}\n", "archivo2")
         texto_diferencias.insert(tk.END, "\n")
 
+    # Mostrar las ocurrencias adicionales en rojo
+    for archivo, ocurrencias in ocurrencias_adicionales:
+        texto_diferencias.insert(tk.END, f"Ocurrencias adicionales en {archivo}:\n")
+        for ocurrencia in ocurrencias:
+            texto_diferencias.insert(tk.END, f"{ocurrencia}\n", "ocurrencia_adicional")
+
     # Configurar el estilo del texto
     texto_diferencias.tag_config("archivo1", background="lightgreen")
     texto_diferencias.tag_config("archivo2", background="pink")
+    texto_diferencias.tag_config("ocurrencia_adicional", background="#CBD0E2")
+    
 
     ventana.mainloop()
 # ----------------------------------------------------------------------------   
