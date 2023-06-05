@@ -181,34 +181,35 @@ def mostrar_diferencias(diferencias, grupos_restantes1, grupos_restantes2):
         texto_diferencias.insert(tk.END, f"Grupo {clave}:\n")
         texto_diferencias.insert(tk.END, "Archivo 1:\n")
         for linea in grupo1:
-            texto_diferencias.insert(tk.END, f"{linea}\n")
+            texto_diferencias.insert(tk.END, f"{linea}\n","archivo1")
         texto_diferencias.insert(tk.END, "Archivo 2:\n")
         for linea in grupo2:
-            texto_diferencias.insert(tk.END, f"{linea}\n")
+            texto_diferencias.insert(tk.END, f"{linea}\n","archivo2")
         texto_diferencias.insert(tk.END, "\n")
 
-    # Mostrar los grupos restantes del archivo 1
+    # Mostrar los grupos restantes del archivo 1 al final
     if grupos_restantes1:
-        texto_diferencias.insert(tk.END, "Grupos restantes en archivo 1:\n")
+        texto_diferencias.insert(tk.END, "\nGrupos restantes en archivo 1:\n")
         for grupo in grupos_restantes1:
             texto_diferencias.insert(tk.END, f"Grupo {grupo}:\n")
             for linea in grupos1[grupo]:
-                texto_diferencias.insert(tk.END, f"{linea}\n")
+                texto_diferencias.insert(tk.END, f"{linea}\n","restante_archivo1")
             texto_diferencias.insert(tk.END, "\n")
 
-    # Mostrar los grupos restantes del archivo 2
+    # Mostrar los grupos restantes del archivo 2 al final
     if grupos_restantes2:
-        texto_diferencias.insert(tk.END, "Grupos restantes en archivo 2:\n")
+        texto_diferencias.insert(tk.END, "\nGrupos restantes en archivo 2:\n")
         for grupo in grupos_restantes2:
             texto_diferencias.insert(tk.END, f"Grupo {grupo}:\n")
             for linea in grupos2[grupo]:
-                texto_diferencias.insert(tk.END, f"{linea}\n")
+                texto_diferencias.insert(tk.END, f"{linea}\n","restante_archivo2")
             texto_diferencias.insert(tk.END, "\n")
 
     # Configurar el estilo del texto
-    # texto_diferencias.tag_config("archivo1", background="lightgreen")
-    # texto_diferencias.tag_config("archivo2", background="pink")
-    # texto_diferencias.tag_config("ocurrencia_adicional", background="#CBD0E2")
+    texto_diferencias.tag_config("archivo1", background="lightgreen")
+    texto_diferencias.tag_config("archivo2", background="pink")
+    texto_diferencias.tag_config("restante_archivo1", background="tomato")
+    texto_diferencias.tag_config("restante_archivo2", background="tomato")
 
     ventana.mainloop()
 
