@@ -1,3 +1,4 @@
+import os
 import tkinter as tk
 import customtkinter as ctk
 from PIL import Image
@@ -109,12 +110,18 @@ def seleccionar_archivo1():
     global archivo1
     archivo1 = filedialog.askopenfilename(
         title="Seleccionar archivo 1", filetypes=(("Archivos de texto", "*"),))
+    # Obtener el nombre del archivo
+    global nombre_archivo1
+    nombre_archivo1 = os.path.basename(archivo1)
 
 
 def seleccionar_archivo2():
     global archivo2
     archivo2 = filedialog.askopenfilename(
         title="Seleccionar archivo 2", filetypes=(("Archivos de texto", "*"),))
+    # Obtener el nombre del archivo
+    global nombre_archivo1
+    nombre_archivo1 = os.path.basename(archivo2)
 
 
 def comparar_archivos():
@@ -182,30 +189,62 @@ def mostrar_diferencias(diferencias, grupos_restantes1, grupos_restantes2):
         if clave not in grupos_restantes1 and clave not in grupos_restantes2:
             texto_diferencias.insert(tk.END, f"Grupo {clave}:\n")
             texto_diferencias.insert(tk.END, "Archivo 1:\n")
+            suma_campo8_grupo1 = 0.0
+            suma_campo9_grupo1 = 0.0
             for linea in grupo1:
-                texto_diferencias.insert(tk.END, f"{linea}\n","archivo1")
+                texto_diferencias.insert(tk.END, f"{linea}\n", "archivo1")
+                campos = linea.strip().split("|")
+                suma_campo8_grupo1 += float(campos[7])
+                suma_campo9_grupo1 += float(campos[8])
+            texto_diferencias.insert(tk.END, f"Suma Cantidad UMC: {suma_campo8_grupo1}\n")
+            texto_diferencias.insert(tk.END, f"Suma Monto: {suma_campo9_grupo1}\n")
             texto_diferencias.insert(tk.END, "Archivo 2:\n")
+
+            suma_campo8_grupo2 = 0.0
+            suma_campo9_grupo2 = 0.0
             for linea in grupo2:
-                texto_diferencias.insert(tk.END, f"{linea}\n","archivo2")
+                texto_diferencias.insert(tk.END, f"{linea}\n", "archivo2")
+                campos = linea.strip().split("|")
+                suma_campo8_grupo2 += float(campos[7])
+                suma_campo9_grupo2 += float(campos[8])
+            texto_diferencias.insert(tk.END, f"Suma Cantidad UMC: {suma_campo8_grupo2}\n")
+            texto_diferencias.insert(tk.END, f"Suma Monto: {suma_campo9_grupo2}\n")
+
+            
             texto_diferencias.insert(tk.END, "\n")
 
 
-    # Mostrar los grupos restantes del archivo 1 al final
+
+    # Mostrar los grupos restantes del archivo 1
     if grupos_restantes1:
-        texto_diferencias.insert(tk.END, "\nGrupos restantes en archivo 1:\n")
+        texto_diferencias.insert(tk.END, "Grupos restantes en archivo 1:\n")
         for grupo in grupos_restantes1:
             texto_diferencias.insert(tk.END, f"Grupo {grupo}:\n")
+            suma_campo8 = 0.0
+            suma_campo9 = 0.0
             for linea in grupos1[grupo]:
-                texto_diferencias.insert(tk.END, f"{linea}\n","restante_archivo1")
+                texto_diferencias.insert(tk.END, f"{linea}\n", "restante_archivo1")
+                campos = linea.strip().split("|")
+                suma_campo8 += float(campos[7])
+                suma_campo9 += float(campos[8])
+            texto_diferencias.insert(tk.END, f"Suma Cantidad UMC: {suma_campo8}\n")
+            texto_diferencias.insert(tk.END, f"Suma Monto: {suma_campo9}\n")
             texto_diferencias.insert(tk.END, "\n")
 
-    # Mostrar los grupos restantes del archivo 2 al final
+    # Mostrar los grupos restantes del archivo 2
     if grupos_restantes2:
-        texto_diferencias.insert(tk.END, "\nGrupos restantes en archivo 2:\n")
+        texto_diferencias.insert(tk.END, "Grupos restantes en archivo 2:\n")
         for grupo in grupos_restantes2:
             texto_diferencias.insert(tk.END, f"Grupo {grupo}:\n")
+            suma_campo8 = 0.0
+            suma_campo9 = 0.0
             for linea in grupos2[grupo]:
-                texto_diferencias.insert(tk.END, f"{linea}\n","restante_archivo2")
+                texto_diferencias.insert(tk.END, f"{linea}\n", "restante_archivo2")
+                campos = linea.strip().split("|")
+                suma_campo8 += float(campos[7])
+                suma_campo9 += float(campos[8])
+            texto_diferencias.insert(tk.END, f"Suma Cantidad UMC: {suma_campo8}\n")
+            texto_diferencias.insert(tk.END, f"Suma Monto: {suma_campo9}\n")
             texto_diferencias.insert(tk.END, "\n")
 
     # Configurar el estilo del texto
