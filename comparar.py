@@ -178,14 +178,17 @@ def mostrar_diferencias(diferencias, grupos_restantes1, grupos_restantes2):
 
     # Mostrar las diferencias grupo por grupo
     for clave, grupo1, grupo2 in diferencias:
-        texto_diferencias.insert(tk.END, f"Grupo {clave}:\n")
-        texto_diferencias.insert(tk.END, "Archivo 1:\n")
-        for linea in grupo1:
-            texto_diferencias.insert(tk.END, f"{linea}\n","archivo1")
-        texto_diferencias.insert(tk.END, "Archivo 2:\n")
-        for linea in grupo2:
-            texto_diferencias.insert(tk.END, f"{linea}\n","archivo2")
-        texto_diferencias.insert(tk.END, "\n")
+        # Verificar si el grupo actual está en grupos_restantes1 o grupos_restantes2
+        if clave not in grupos_restantes1 and clave not in grupos_restantes2:
+            texto_diferencias.insert(tk.END, f"Grupo {clave}:\n")
+            texto_diferencias.insert(tk.END, "Archivo 1:\n")
+            for linea in grupo1:
+                texto_diferencias.insert(tk.END, f"{linea}\n","archivo1")
+            texto_diferencias.insert(tk.END, "Archivo 2:\n")
+            for linea in grupo2:
+                texto_diferencias.insert(tk.END, f"{linea}\n","archivo2")
+            texto_diferencias.insert(tk.END, "\n")
+
 
     # Mostrar los grupos restantes del archivo 1 al final
     if grupos_restantes1:
