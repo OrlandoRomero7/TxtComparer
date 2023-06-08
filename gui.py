@@ -7,7 +7,7 @@ from functions import seleccionar_archivo1, seleccionar_archivo2, comparar_archi
 window = ctk.CTk()
 window.iconbitmap(r'assets/icons/app.ico')
 window.title("  Comparador")
-window.geometry("800x475")
+window.geometry("820x475")
 window.resizable(False, False)
 
 frame = ctk.CTkFrame(window, fg_color="#4D5057")
@@ -42,12 +42,12 @@ converted_add_first_icon = ctk.CTkImage(resized_add_first_icon, size=(60, 60))
 
 add_first_icon = ctk.CTkLabel(
     frame, image=converted_add_first_icon, text=None, fg_color="#4D5057")
-add_first_icon.grid(row=1, column=0, padx=(50, 0), pady=(110, 0))
+add_first_icon.grid(row=1, column=0, padx=(50, 0), pady=(115, 0))
 
 # ----------------------------------------------------------------------------
 
 separator = ctk.CTkFrame(frame, width=115, height=2, fg_color="#787c7f")
-separator.grid(row=1, column=1, padx=(30, 0), pady=(130, 0), sticky="w")
+separator.grid(row=1, column=1, padx=(30, 0), pady=(135, 0), sticky="w")
 
 # # ----------------------------------------------------------------------------
 
@@ -60,13 +60,13 @@ converted_add_second_icon = ctk.CTkImage(
 
 add_second_icon = ctk.CTkLabel(
     frame, image=converted_add_second_icon, text=None, fg_color="#4D5057")
-add_second_icon.grid(row=1, column=2, pady=(110, 0))
+add_second_icon.grid(row=1, column=2, pady=(115, 0))
 
 # ----------------------------------------------------------------------------
 
 second_separator = ctk.CTkFrame(
     frame, width=115, height=2, fg_color="#787c7f")
-second_separator.grid(row=1, column=3, padx=(30, 0), pady=(130, 0), sticky="w")
+second_separator.grid(row=1, column=3, padx=(30, 0), pady=(135, 0), sticky="w")
 
 # ----------------------------------------------------------------------------
 
@@ -77,7 +77,7 @@ resized_generate_icon = raw_generate_icon.resize(
 converted_generate_icon = ctk.CTkImage(resized_generate_icon, size=(60, 60))
 generate_icon = ctk.CTkLabel(
     frame, image=converted_generate_icon, text=None, fg_color="#4D5057")
-generate_icon.grid(row=1, column=4, padx=(50, 0), pady=(110, 0))
+generate_icon.grid(row=1, column=4, padx=(50, 0), pady=(115, 0))
 
 # Funciones para seleccionar los archivos
 # -----------------------------------------------------------------------------
@@ -88,19 +88,19 @@ generate_icon.grid(row=1, column=4, padx=(50, 0), pady=(110, 0))
 
 select_file1_button = ctk.CTkButton(frame, text="Archivo 1", command=seleccionar_archivo1,
                                     bg_color="#4D5057", corner_radius=7, font=("Segoe UI", 15), width=114)
-select_file1_button.grid(row=2, column=0, padx=(50, 0), pady=(45, 0))
+select_file1_button.grid(row=2, column=0, padx=(50, 0), pady=(50, 0))
 
 # ----------------------------------------------------------------------------
 # ----------------------------------------------------------------------------
 select_file2_button = ctk.CTkButton(frame, text="Archivo 2", command=seleccionar_archivo2,
                                     bg_color="#4D5057", corner_radius=7, font=("Segoe UI", 15), width=114)
-select_file2_button.grid(row=2, column=2, pady=(45, 0))
+select_file2_button.grid(row=2, column=2, pady=(50, 0))
 
 # ----------------------------------------------------------------------------
 # ----------------------------------------------------------------------------
 compare_button = ctk.CTkButton(frame, text="Comparar", command=comparar_archivos,
                                bg_color="#4D5057", corner_radius=7, font=("Segoe UI", 15), width=114)
-compare_button.grid(row=2, column=4, padx=(50, 0), pady=(45, 0))
+compare_button.grid(row=2, column=4, padx=(50, 0), pady=(50, 0))
 
 # Start the main application loop
 window.mainloop()
