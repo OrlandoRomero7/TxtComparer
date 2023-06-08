@@ -17,6 +17,7 @@ def seleccionar_archivo1():
     # Obtener el nombre del archivo
     global nombre_archivo1
     nombre_archivo1 = os.path.basename(archivo1)
+    return archivo1, nombre_archivo1
 
 
 def seleccionar_archivo2():
@@ -26,6 +27,7 @@ def seleccionar_archivo2():
     # Obtener el nombre del archivo
     global nombre_archivo1
     nombre_archivo1 = os.path.basename(archivo2)
+    return archivo2, nombre_archivo1
 
 
 def comparar_archivos():

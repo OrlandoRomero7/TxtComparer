@@ -47,7 +47,8 @@ def mostrar_diferencias(diferencias, grupos_restantes1, grupos_restantes2, grupo
     # Cuadro de entrada y botón de búsqueda
     entry_buscar = tk.Entry(control_frame, width=30)
     entry_buscar.grid(row=0, column=1, padx=5)
-    btn_buscar = tk.Button(control_frame, text="Buscar", command=buscar_texto)
+    btn_buscar = tk.Button(
+        control_frame, text="🔎 Buscar", command=buscar_texto)
     btn_buscar.grid(row=0, column=2, padx=5)
 
     # Botón para guardar contenido en un archivo

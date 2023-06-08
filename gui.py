@@ -2,7 +2,6 @@
 import customtkinter as ctk
 from PIL import Image
 from functions import seleccionar_archivo1, seleccionar_archivo2, comparar_archivos
-
 # --Create the main window------------------------------------------------------------------------------
 window = ctk.CTk()
 window.iconbitmap(r'assets/icons/app.ico')
@@ -17,8 +16,33 @@ frame.grid(row=0, column=0, sticky="nsew")
 # Ajustamos la configuración de la fila 0 para que se expanda verticalmente
 window.grid_rowconfigure(0, weight=1)
 window.grid_columnconfigure(0, weight=1)
-# --ENCABEZADO------------------------------------------------------------------
+# --*---------------------------------------------------------------------
 
+
+def on_select_file1_button_pressed():
+    archivo1, nombre_archivo1 = seleccionar_archivo1()
+
+    # Usa el nombre del archivo para actualizar el texto del label
+    if nombre_archivo1:
+        archivo1_cargado.configure(
+            text=nombre_archivo1, text_color="#B7D47F", font=("Roboto", 12, "bold"))
+    else:
+        archivo1_cargado.configure(
+            text="VACIO", text_color="#B7D47F", font=("Roboto", 12, "bold"))
+
+
+def on_select_file2_button_pressed():
+    archivo2, nombre_archivo2 = seleccionar_archivo2()
+    # Usa el nombre del archivo para actualizar el texto del label
+    if nombre_archivo2:
+        archivo2_cargado.configure(
+            text=nombre_archivo2, text_color="#B7D47F", font=("Roboto", 12, "bold"))
+    else:
+        archivo2_cargado.configure(
+            text="VACIO", text_color="#B7D47F", font=("Roboto", 12, "bold"))
+
+
+# ------------------------------------------------------------------------------
 # Create two labels
 label1 = ctk.CTkLabel(frame, text="TXT", fg_color="#4D5057",
                       text_color="#A5DE37", font=("Cascadia Code", 20, "bold"))
@@ -86,13 +110,13 @@ generate_icon.grid(row=1, column=4, padx=(50, 0), pady=(115, 0))
 # Botones
 # ----------------------------------------------------------------------------
 
-select_file1_button = ctk.CTkButton(frame, text="Archivo 1", command=seleccionar_archivo1,
+select_file1_button = ctk.CTkButton(frame, text="Archivo 1", command=on_select_file1_button_pressed,
                                     bg_color="#4D5057", corner_radius=7, font=("Segoe UI", 15), width=114)
 select_file1_button.grid(row=2, column=0, padx=(50, 0), pady=(50, 0))
 
 # ----------------------------------------------------------------------------
 # ----------------------------------------------------------------------------
-select_file2_button = ctk.CTkButton(frame, text="Archivo 2", command=seleccionar_archivo2,
+select_file2_button = ctk.CTkButton(frame, text="Archivo 2", command=on_select_file2_button_pressed,
                                     bg_color="#4D5057", corner_radius=7, font=("Segoe UI", 15), width=114)
 select_file2_button.grid(row=2, column=2, pady=(50, 0))
 
@@ -102,5 +126,17 @@ compare_button = ctk.CTkButton(frame, text="Comparar", command=comparar_archivos
                                bg_color="#4D5057", corner_radius=7, font=("Segoe UI", 15), width=114)
 compare_button.grid(row=2, column=4, padx=(50, 0), pady=(50, 0))
 
+# ----------------------------------------------------------------------------
+# Indicador archivos cargados
+archivo1_cargado = ctk.CTkLabel(
+    frame, text="VACIO", text_color="#B7D47F", font=("Roboto", 12, "bold"))
+archivo1_cargado.grid(row=3, column=0, padx=(50, 0), pady=(10, 0))
+
+
+archivo2_cargado = ctk.CTkLabel(
+    frame, text="VACIO", text_color="#B7D47F", font=("Roboto", 12, "bold"))
+archivo2_cargado.grid(row=3, column=2, pady=(10, 0))
+
+# ----------------------------------------------------------------------------
 # Start the main application loop
 window.mainloop()
