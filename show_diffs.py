@@ -15,7 +15,7 @@ def mostrar_diferencias(diferencias, grupos_restantes1, grupos_restantes2, grupo
             indice = "1.0"
             while True:
                 indice = texto_diferencias.search(
-                    texto_buscar, indice, stopindex=tk.END)
+                    texto_buscar, indice, nocase=True, stopindex=tk.END)
                 if not indice:
                     break
                 fin_indice = f"{indice}+{len(texto_buscar)}c"
@@ -61,15 +61,17 @@ def mostrar_diferencias(diferencias, grupos_restantes1, grupos_restantes2, grupo
         # Verificar si el grupo actual está en grupos_restantes1 o grupos_restantes2
         if clave not in grupos_restantes1 and clave not in grupos_restantes2:
             texto_diferencias.insert(tk.END, f"Grupo {clave}:\n")
-            texto_diferencias.insert(tk.END, "Archivo 1:\n")
+            texto_diferencias.insert(tk.END, "| Archivo 1 |:\n")
             suma_campo8_grupo1 = 0.0
             suma_campo9_grupo1 = 0.0
+            suma_campo13_grupo1 = 0.0
 
             for linea in grupo1:
                 texto_diferencias.insert(tk.END, f"{linea}\n", "archivo1")
                 campos = linea.strip().split("|")
                 suma_campo8_grupo1 += float(campos[7])
                 suma_campo9_grupo1 += float(campos[8])
+                suma_campo13_grupo1 += float(campos[12])
                 campo_11 = campos[11]
 
             texto_diferencias.insert(
@@ -77,18 +79,26 @@ def mostrar_diferencias(diferencias, grupos_restantes1, grupos_restantes2, grupo
             texto_diferencias.insert(
                 tk.END, f"Suma Monto: {suma_campo9_grupo1}\n")
             texto_diferencias.insert(
+                tk.END, f"Suma UMT: {suma_campo13_grupo1}\n")
+            texto_diferencias.insert(
                 tk.END, f"UMC: {campo_11}\n")
+            texto_diferencias.insert(
+                tk.END, f"-" * 30)
+            texto_diferencias.insert(
+                tk.END, f"\n")
 
-            texto_diferencias.insert(tk.END, "Archivo 2:\n")
+            texto_diferencias.insert(tk.END, "| Archivo 2 |:\n")
 
             suma_campo8_grupo2 = 0.0
             suma_campo9_grupo2 = 0.0
+            suma_campo13_grupo2 = 0.0
 
             for linea in grupo2:
                 texto_diferencias.insert(tk.END, f"{linea}\n", "archivo2")
                 campos = linea.strip().split("|")
                 suma_campo8_grupo2 += float(campos[7])
                 suma_campo9_grupo2 += float(campos[8])
+                suma_campo13_grupo2 += float(campos[12])
                 campo_11 = campos[11]
 
             texto_diferencias.insert(
@@ -96,7 +106,13 @@ def mostrar_diferencias(diferencias, grupos_restantes1, grupos_restantes2, grupo
             texto_diferencias.insert(
                 tk.END, f"Suma Monto: {suma_campo9_grupo2}\n")
             texto_diferencias.insert(
+                tk.END, f"Suma UMT: {suma_campo13_grupo2}\n")
+            texto_diferencias.insert(
                 tk.END, f"UMC: {campo_11}\n")
+            texto_diferencias.insert(
+                tk.END, f"-" * 130)
+            texto_diferencias.insert(
+                tk.END, f"\n")
 
             texto_diferencias.insert(tk.END, "\n")
 
@@ -107,6 +123,7 @@ def mostrar_diferencias(diferencias, grupos_restantes1, grupos_restantes2, grupo
             texto_diferencias.insert(tk.END, f"Grupo {grupo}:\n")
             suma_campo8 = 0.0
             suma_campo9 = 0.0
+            suma_campo13 = 0.0
 
             for linea in grupos1[grupo]:
                 texto_diferencias.insert(
@@ -114,13 +131,19 @@ def mostrar_diferencias(diferencias, grupos_restantes1, grupos_restantes2, grupo
                 campos = linea.strip().split("|")
                 suma_campo8 += float(campos[7])
                 suma_campo9 += float(campos[8])
+                suma_campo13 += float(campos[12])
                 campo_11 = campos[11]
             texto_diferencias.insert(
                 tk.END, f"Suma Cantidad UMC: {suma_campo8}\n")
             texto_diferencias.insert(tk.END, f"Suma Monto: {suma_campo9}\n")
+            texto_diferencias.insert(tk.END, f"Suma UMT: {suma_campo13}\n")
 
             texto_diferencias.insert(
                 tk.END, f"UMC: {campo_11}\n")
+            texto_diferencias.insert(
+                tk.END, f"-" * 30)
+            texto_diferencias.insert(
+                tk.END, f"\n")
             texto_diferencias.insert(tk.END, "\n")
     # Mostrar los grupos restantes del archivo 2
     if grupos_restantes2:
@@ -129,6 +152,7 @@ def mostrar_diferencias(diferencias, grupos_restantes1, grupos_restantes2, grupo
             texto_diferencias.insert(tk.END, f"Grupo {grupo}:\n")
             suma_campo8 = 0.0
             suma_campo9 = 0.0
+            suma_campo13 = 0.0
 
             for linea in grupos2[grupo]:
                 texto_diferencias.insert(
@@ -136,12 +160,18 @@ def mostrar_diferencias(diferencias, grupos_restantes1, grupos_restantes2, grupo
                 campos = linea.strip().split("|")
                 suma_campo8 += float(campos[7])
                 suma_campo9 += float(campos[8])
+                suma_campo13 += float(campos[12])
                 campo_11 = campos[11]
             texto_diferencias.insert(
                 tk.END, f"Suma Cantidad UMC: {suma_campo8}\n")
             texto_diferencias.insert(tk.END, f"Suma Monto: {suma_campo9}\n")
+            texto_diferencias.insert(tk.END, f"Suma UMT: {suma_campo13}\n")
             texto_diferencias.insert(
                 tk.END, f"UMC: {campo_11}\n")
+            texto_diferencias.insert(
+                tk.END, f"-" * 130)
+            texto_diferencias.insert(
+                tk.END, f"\n")
             texto_diferencias.insert(tk.END, "\n")
 
     # Configurar el estilo del texto
