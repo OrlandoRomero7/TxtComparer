@@ -40,9 +40,9 @@ def on_select_file1_button_pressed():
 
     # Usa el nombre del archivo para actualizar el texto del label
     if nombre_archivo1:
-        if len(nombre_archivo1)>=12:
+        if len(nombre_archivo1)>12:
             archivo1_cargado.configure(
-                text=nombre_archivo1[:9]+"...", text_color="#B7D47F", font=("Roboto", 12, "bold"))
+                text=nombre_archivo1[:12]+"...", text_color="#B7D47F", font=("Roboto", 12, "bold"))
             
             file1_tooltip = CTkToolTip(archivo1_cargado, message=nombre_archivo1)
         else:
@@ -69,9 +69,9 @@ def on_select_file2_button_pressed():
         file2_tooltip.hide()
 
     if nombre_archivo2:
-        if len(nombre_archivo2)>=12:
+        if len(nombre_archivo2)>12:
             archivo2_cargado.configure(
-                text=nombre_archivo2[:9]+"...", text_color="#B7D47F", font=("Roboto", 12, "bold"))
+                text=nombre_archivo2[:12]+"...", text_color="#B7D47F", font=("Roboto", 12, "bold"))
             
             file2_tooltip = CTkToolTip(archivo2_cargado, message=nombre_archivo2)
         else:
