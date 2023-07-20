@@ -69,37 +69,38 @@ def mostrar_diferencias(diferencias, grupos_restantes1, grupos_restantes2, grupo
 
     # Crear el widget de desplazamiento vertical
     scroll_y = tk.Scrollbar(ventana)
-    scroll_y.pack(side=tk.RIGHT, fill=tk.Y)
+    scroll_y.grid(row=0, column=1, sticky="ns")
     texto_diferencias = tk.Text(ventana, yscrollcommand=scroll_y.set)
-    texto_diferencias.pack(fill=tk.BOTH, expand=True)
+    texto_diferencias.grid(row=0, column=0, sticky="nsew")
 
     # Configurar la barra de desplazamiento
     scroll_y.config(command=texto_diferencias.yview)
 
     # Frame para contener los widgets de búsqueda y guardar y resaltar
     control_frame = tk.Frame(ventana)
-    control_frame.pack(pady=5)
-
+    control_frame.grid(row=1, column=0, sticky="nsew", padx=5, pady=5)
+    
+    
 
     # Cuadro de entrada y botón de búsqueda
     entry_buscar = tk.Entry(control_frame, width=30)
-    entry_buscar.grid(row=0, column=1, padx=5)
+    entry_buscar.grid(row=1, column=1, padx=5, pady=5)
     
     
     btn_buscar = tk.Button(
         control_frame, text="🔎 Buscar")
-    btn_buscar.grid(row=0, column=2, padx=5)
+    btn_buscar.grid(row=1, column=2, padx=5, pady=5)
     btn_buscar.bind("<Button-1>",  buscar_texto)
     entry_buscar.bind("<Return>", buscar_texto)
 
     # Botón para guardar contenido en un archivo
     btn_guardar = tk.Button(control_frame, text="Exportar 💾",
                             command=guardar_contenido)
-    btn_guardar.grid(row=0, column=3, padx=5)
+    btn_guardar.grid(row=1, column=3, padx=5, pady=5)
 
     # Botón para resaltar |
     btn_guardar = tk.Button(control_frame, text="Resaltar |", command=buscar_simbolo)#,
-    btn_guardar.grid(row=0, column=4, padx=5)
+    btn_guardar.grid(row=1, column=4, padx=5, pady=5)
 
     # Mostrar las diferencias grupo por grupo
     for clave, grupo1, grupo2 in diferencias:
@@ -250,6 +251,11 @@ def mostrar_diferencias(diferencias, grupos_restantes1, grupos_restantes2, grupo
     # Llamar a ambas funciones de búsqueda para resaltar al mismo tiempo
     buscar_texto(None)
     #buscar_simbolo()
+    control_frame.grid_columnconfigure(0, weight=1)
+    control_frame.grid_columnconfigure(5, weight=1)
+
+    ventana.grid_rowconfigure(0, weight=1)
+    ventana.grid_columnconfigure(0, weight=1)
 
     ventana.mainloop()
 
