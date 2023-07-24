@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import filedialog
+from show_table import mostrar_tabla
 
 
 def mostrar_diferencias(diferencias, grupos_restantes1, grupos_restantes2, grupos1, grupos2):
@@ -99,8 +100,21 @@ def mostrar_diferencias(diferencias, grupos_restantes1, grupos_restantes2, grupo
     btn_guardar.grid(row=1, column=3, padx=5, pady=5)
 
     # Botón para resaltar |
-    btn_guardar = tk.Button(control_frame, text="Resaltar |", command=buscar_simbolo)#,
+    btn_guardar = tk.Button(control_frame, text="Resaltar |", command=buscar_simbolo)
     btn_guardar.grid(row=1, column=4, padx=5, pady=5)
+
+    
+    """ documento1 = []
+    fraccion1 = []
+    documento2 = []
+    fraccion2 = [] """
+    documentos = []
+    fracciones = []
+    nicos = []
+    cantidad_comercial = []
+    cantidad_tarifa = []
+    contador = 0
+    contador2 = 0
 
     # Mostrar los grupos restantes del archivo 1
     if grupos_restantes1:
@@ -110,26 +124,49 @@ def mostrar_diferencias(diferencias, grupos_restantes1, grupos_restantes2, grupo
             suma_campo8 = 0.0
             suma_campo9 = 0.0
             suma_campo10 = 0.0
+            suma_campo11 = 0.0
             suma_campo13 = 0.0
+            
 
             for linea in grupos1[grupo]:
                 texto_diferencias.insert(
                     tk.END, f"{linea}\n", "restante_archivo1")
                 campos = linea.strip().split("|")
+                documento = str(campos[1])
+                nico = str(campos[4])
                 suma_campo8 += float(campos[7])
                 suma_campo9 += float(campos[8])
                 suma_campo10 += float(campos[9])
+                suma_campo11 += float(campos[10])
                 suma_campo13 += float(campos[12])
-                campo_11 = campos[11]
+                campo_12 = campos[11]
+
+            
+            if contador == 0:
+                documentos.append("Restantes")
+                fracciones.append(" ")
+                nicos.append(" ")
+                cantidad_comercial.append(" ")
+                cantidad_tarifa.append(" ")
+            contador = contador + 1
+
+            documentos.append(documento)
+            fracciones.append(grupo)
+            nicos.append(nico)
+            cantidad_comercial.append(round(suma_campo10,3))
+            cantidad_tarifa.append(round(suma_campo13,5))
+
+
+
             texto_diferencias.insert(
-                tk.END, f"Suma Cantidad UMC: {round(suma_campo8,3)}\n")
+                tk.END, f"Suma Cantidad UMC (Valor en Aduana): {round(suma_campo8,3)}\n")
             texto_diferencias.insert(
                 tk.END, f"Suma Valor Comercial: {round(suma_campo10,3)}\n")
             texto_diferencias.insert(tk.END, f"Suma Monto: {round(suma_campo9,2)}\n")
             texto_diferencias.insert(tk.END, f"Suma UMT: {round(suma_campo13,5)}\n")
-
+            texto_diferencias.insert(tk.END, f"Suma UMC: {round(suma_campo11,3)}\n")
             texto_diferencias.insert(
-                tk.END, f"UMC: {campo_11}\n")
+                tk.END, f"UMC: {campo_12}\n")
             texto_diferencias.insert(
                 tk.END, f"-" * 30)
             texto_diferencias.insert(
@@ -143,33 +180,48 @@ def mostrar_diferencias(diferencias, grupos_restantes1, grupos_restantes2, grupo
             suma_campo8 = 0.0
             suma_campo9 = 0.0
             suma_campo10 = 0.0
+            suma_campo11 = 0.0
             suma_campo13 = 0.0
 
             for linea in grupos2[grupo]:
                 texto_diferencias.insert(
                     tk.END, f"{linea}\n", "restante_archivo2")
                 campos = linea.strip().split("|")
+                documento = str(campos[1])
+                nico = str(campos[4])
                 suma_campo8 += float(campos[7])
                 suma_campo9 += float(campos[8])
                 suma_campo10 += float(campos[9])
+                suma_campo11 += float(campos[10])
                 suma_campo13 += float(campos[12])
-                campo_11 = campos[11]
+                campo_12 = campos[11]
+
+            
+            
+            documentos.append(documento)
+            fracciones.append(grupo)
+            nicos.append(nico)
+            cantidad_comercial.append(round(suma_campo10,3))
+            cantidad_tarifa.append(round(suma_campo13,5))
+
             texto_diferencias.insert(
-                tk.END, f"Suma Cantidad UMC: {round(suma_campo8,3)}\n")
+                tk.END, f"Suma Cantidad UMC (Valor en Aduana): {round(suma_campo8,3)}\n")
             texto_diferencias.insert(
                 tk.END, f"Suma Valor Comercial: {round(suma_campo10,3)}\n")
             texto_diferencias.insert(tk.END, f"Suma Monto: {round(suma_campo9,2)}\n")
             texto_diferencias.insert(tk.END, f"Suma UMT: {round(suma_campo13,5)}\n")
+            texto_diferencias.insert(tk.END, f"Suma UMC: {round(suma_campo11,3)}\n")
             texto_diferencias.insert(
-                tk.END, f"UMC: {campo_11}\n")
+                tk.END, f"UMC: {campo_12}\n")
             texto_diferencias.insert(
                 tk.END, f"-" * 130)
             texto_diferencias.insert(
                 tk.END, f"\n")
             texto_diferencias.insert(tk.END, "\n")
-
+    
     # Mostrar las diferencias grupo por grupo
     for clave, grupo1, grupo2 in diferencias:
+        
         # Verificar si el grupo actual está en grupos_restantes1 o grupos_restantes2
         if clave not in grupos_restantes1 and clave not in grupos_restantes2:
             texto_diferencias.insert(tk.END, f"Grupo {clave}:\n")
@@ -177,19 +229,43 @@ def mostrar_diferencias(diferencias, grupos_restantes1, grupos_restantes2, grupo
             suma_campo8_grupo1 = 0.0
             suma_campo9_grupo1 = 0.0
             suma_campo10_grupo1 = 0.0
+            suma_campo11_grupo1 = 0.0
             suma_campo13_grupo1 = 0.0
+
+            
 
             for linea in grupo1:
                 texto_diferencias.insert(tk.END, f"{linea}\n", "archivo1")
                 campos = linea.strip().split("|")
+                documento = str(campos[1])
+                nico = str(campos[4])
                 suma_campo8_grupo1 += float(campos[7])
                 suma_campo9_grupo1 += float(campos[8])
-                suma_campo10_grupo1 += float(campos[9])
+                suma_campo10_grupo1 += float(campos[9]) #Suma cantidad comercial
+                suma_campo11_grupo1 += float(campos[10])
                 suma_campo13_grupo1 += float(campos[12])
-                campo_11 = campos[11]
+                campo_12 = campos[11]
+
+            
+            #fraccion = clave
+            #print("Documento: ",documento,"Fraccion: ",clave,"Cantidad Comercial Archivo1: ",suma_campo10_grupo1)
+            if contador2 == 0:
+                documentos.append("Diferencias") 
+                fracciones.append(" ")
+                nicos.append(" ")
+                cantidad_comercial.append(" ")
+                cantidad_tarifa.append(" ")
+            contador2 = contador2 + 1
+
+            documentos.append(documento)
+            fracciones.append(clave)
+            nicos.append(nico)
+            cantidad_comercial.append(round(suma_campo10_grupo1,3))
+            cantidad_tarifa.append(round(suma_campo13_grupo1,5))
+            
 
             texto_diferencias.insert(
-                tk.END, f"Suma Cantidad UMC: {round(suma_campo8_grupo1,3)}\n")
+                tk.END, f"Suma Cantidad UMC (Valor en Aduana): {round(suma_campo8_grupo1,3)}\n")
             texto_diferencias.insert(
                 tk.END, f"Suma Valor Comercial: {round(suma_campo10_grupo1,3)}\n")
             texto_diferencias.insert(
@@ -197,7 +273,9 @@ def mostrar_diferencias(diferencias, grupos_restantes1, grupos_restantes2, grupo
             texto_diferencias.insert(
                 tk.END, f"Suma UMT: {round(suma_campo13_grupo1,5)}\n")
             texto_diferencias.insert(
-                tk.END, f"UMC: {campo_11}\n")
+                tk.END, f"Suma UMC: {round(suma_campo11_grupo1,3)}\n")
+            texto_diferencias.insert(
+                tk.END, f"UMC: {campo_12}\n")
             texto_diferencias.insert(
                 tk.END, f"-" * 30)
             texto_diferencias.insert(
@@ -208,19 +286,31 @@ def mostrar_diferencias(diferencias, grupos_restantes1, grupos_restantes2, grupo
             suma_campo8_grupo2 = 0.0
             suma_campo9_grupo2 = 0.0
             suma_campo10_grupo2 = 0.0
+            suma_campo11_grupo2 = 0.0
             suma_campo13_grupo2 = 0.0
 
             for linea in grupo2:
                 texto_diferencias.insert(tk.END, f"{linea}\n", "archivo2")
                 campos = linea.strip().split("|")
-                suma_campo8_grupo2 += float(campos[7])
+                documento = str(campos[1])
+                nico = str(campos[4])
+                suma_campo8_grupo2 += float(campos[7]) # Suma UMC Valor en aduana
                 suma_campo9_grupo2 += float(campos[8])
                 suma_campo10_grupo2 += float(campos[9])
+                suma_campo11_grupo2 += float(campos[10]) #10 en el array, 11 en el txt - name : Suma cantida UMC
                 suma_campo13_grupo2 += float(campos[12])
-                campo_11 = campos[11]
+                campo_12 = campos[11]
+
+            #print("Documento: ",documento,"Fraccion: ",clave,"Cantidad Comercial Archivo2: ",suma_campo10_grupo2)
+
+            documentos.append(documento)
+            fracciones.append(clave)
+            nicos.append(nico)
+            cantidad_comercial.append(round(suma_campo10_grupo2,3))
+            cantidad_tarifa.append(round(suma_campo13_grupo2,5))
 
             texto_diferencias.insert(
-                tk.END, f"Suma Cantidad UMC: {round(suma_campo8_grupo2,3)}\n")
+                tk.END, f"Suma Cantidad UMC (Valor en Aduana): {round(suma_campo8_grupo2,3)}\n")
             texto_diferencias.insert(
                 tk.END, f"Suma Valor Comercial: {round(suma_campo10_grupo2,3)}\n")
             texto_diferencias.insert(
@@ -228,7 +318,9 @@ def mostrar_diferencias(diferencias, grupos_restantes1, grupos_restantes2, grupo
             texto_diferencias.insert(
                 tk.END, f"Suma UMT: {round(suma_campo13_grupo2,5)}\n")
             texto_diferencias.insert(
-                tk.END, f"UMC: {campo_11}\n")
+                tk.END, f"Suma UMC: {round(suma_campo11_grupo2,3)}\n")
+            texto_diferencias.insert(
+                tk.END, f"UMC: {campo_12}\n")
             texto_diferencias.insert(
                 tk.END, f"-" * 130)
             texto_diferencias.insert(
@@ -251,6 +343,12 @@ def mostrar_diferencias(diferencias, grupos_restantes1, grupos_restantes2, grupo
         "encontrado", background="yellow", foreground="black")
         
     # Llamar a ambas funciones de búsqueda para resaltar al mismo tiempo
+
+    # Botón para mirar tabla|
+    btn_mirar_tabla = tk.Button(control_frame, text="Mirar Tabla", command=lambda: mostrar_tabla(documentos,fracciones,nicos,cantidad_comercial,cantidad_tarifa))
+    #btn_mirar_tabla = tk.Button(control_frame, text="Mirar Tabla")
+    btn_mirar_tabla.grid(row=1, column=5,padx=5, pady=5)
+
     buscar_texto(None)
     #buscar_simbolo()
     control_frame.grid_columnconfigure(0, weight=1)

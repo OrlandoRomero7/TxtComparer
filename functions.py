@@ -152,7 +152,6 @@ def comparar_archivos(nombre1,nombre2,archivo1_log_frame,archivo2_log_frame):
                         grupos_restantes2, grupos1, grupos2)
     
 
-
 def display_history(frame, history_file):
     # First, clear existing labels
     for widget in frame.winfo_children():
