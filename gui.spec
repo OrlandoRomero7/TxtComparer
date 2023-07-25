@@ -8,7 +8,7 @@ a = Analysis(
     ['gui.py'],
     pathex=[],
     binaries=[],
-    datas=[('C:/Users/medin/AppData/Roaming/Python/Python310/site-packages/babel', 'babel'), ('C:/Users/medin/AppData/Roaming/Python/Python310/site-packages/customtkinter', 'customtkinter')],
+    datas=[('C:/Users/Orlando/AppData/Local/Programs/Python/Python311/Lib/site-packages/babel', 'babel'), ('C:/Users/Orlando/AppData/Local/Programs/Python/Python311/Lib/site-packages/customtkinter', 'customtkinter')],
     hiddenimports=[],
     hookspath=[],
     hooksconfig={},
@@ -37,7 +37,7 @@ exe = EXE(
     target_arch=None,
     codesign_identity=None,
     entitlements_file=None,
-    icon=['C:\\Users\\medin\\Projects\\TxtComparer\\assets\\icons\\app.ico'],
+    icon=['C:\\Users\\Orlando\\Desktop\\Comparar\\assets\\icons\\app.ico'],
 )
 coll = COLLECT(
     exe,
