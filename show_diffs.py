@@ -3,7 +3,7 @@ from tkinter import filedialog
 from show_table import mostrar_tabla
 
 
-def mostrar_diferencias(diferencias, grupos_restantes1, grupos_restantes2, grupos1, grupos2):
+def mostrar_diferencias(diferencias, grupos_restantes1, grupos_restantes2, grupos1, grupos2,tipo_movimiento_a1,tipo_movimiento_a2):
     ventana = tk.Toplevel()
     ventana.title("Diferencias entre grupos de líneas que inician con 551")
     ventana.geometry("1080x720")
@@ -103,6 +103,36 @@ def mostrar_diferencias(diferencias, grupos_restantes1, grupos_restantes2, grupo
     btn_guardar = tk.Button(control_frame, text="Resaltar |", command=buscar_simbolo)
     btn_guardar.grid(row=1, column=4, padx=5, pady=5)
 
+    # Botón para mirar tabla|
+    btn_mirar_tabla = tk.Button(control_frame, text="Mirar Tabla", command=lambda: mostrar_tabla(documentos,fracciones,
+                                                                                                 nicos,cantidad_comercial,cantidad_tarifa,array_tipo_movimento, unidades_medida))
+    btn_mirar_tabla.grid(row=1, column=5,padx=5, pady=5)
+
+    apendice7 = [
+        {"CLAVE": 1, "DESCRIPCION": "KILO"},
+        {"CLAVE": 2, "DESCRIPCION": "GRAMO"},
+        {"CLAVE": 3, "DESCRIPCION": "METRO LINEAL"},
+        {"CLAVE": 4, "DESCRIPCION": "METRO CUADRADO"},
+        {"CLAVE": 5, "DESCRIPCION": "METRO CÚBICO"},
+        {"CLAVE": 6, "DESCRIPCION": "PIEZA"},
+        {"CLAVE": 7, "DESCRIPCION": "CABEZA"},
+        {"CLAVE": 8, "DESCRIPCION": "LITRO"},
+        {"CLAVE": 9, "DESCRIPCION": "PAR"},
+        {"CLAVE": 10, "DESCRIPCION": "KILOWATT"},
+        {"CLAVE": 11, "DESCRIPCION": "MILLAR"},
+        {"CLAVE": 12, "DESCRIPCION": "JUEGO"},
+        {"CLAVE": 13, "DESCRIPCION": "KILOWATT/HORA"},
+        {"CLAVE": 14, "DESCRIPCION": "TONELADA"},
+        {"CLAVE": 15, "DESCRIPCION": "BARRIL"},
+        {"CLAVE": 16, "DESCRIPCION": "GRAMO NETO"},
+        {"CLAVE": 17, "DESCRIPCION": "DECENAS"},
+        {"CLAVE": 18, "DESCRIPCION": "CIENTOS"},
+        {"CLAVE": 19, "DESCRIPCION": "DOCENAS"},
+        {"CLAVE": 20, "DESCRIPCION": "CAJA"},
+        {"CLAVE": 21, "DESCRIPCION": "BOTELLA"},
+        {"CLAVE": 22, "DESCRIPCION": "CARAT"}
+    ]
+
     
     """ documento1 = []
     fraccion1 = []
@@ -115,6 +145,9 @@ def mostrar_diferencias(diferencias, grupos_restantes1, grupos_restantes2, grupo
     cantidad_tarifa = []
     contador = 0
     contador2 = 0
+    array_tipo_movimento = []
+    unidades_medida = []
+    nombre_campo12 = ""
 
     # Mostrar los grupos restantes del archivo 1
     if grupos_restantes1:
@@ -127,7 +160,7 @@ def mostrar_diferencias(diferencias, grupos_restantes1, grupos_restantes2, grupo
             suma_campo11 = 0.0
             suma_campo13 = 0.0
             
-
+            
             for linea in grupos1[grupo]:
                 texto_diferencias.insert(
                     tk.END, f"{linea}\n", "restante_archivo1")
@@ -139,22 +172,31 @@ def mostrar_diferencias(diferencias, grupos_restantes1, grupos_restantes2, grupo
                 suma_campo10 += float(campos[9])
                 suma_campo11 += float(campos[10])
                 suma_campo13 += float(campos[12])
-                campo_12 = campos[11]
+                campo_12 = campos[11] 
+                for elemento in apendice7:
+                    if elemento["CLAVE"] == int(campo_12):
+                        nombre_campo12 = elemento["DESCRIPCION"]
+                #print(nombre_campo12)
+                
 
             
             if contador == 0:
                 documentos.append("Restantes")
+                array_tipo_movimento.append(" ")
                 fracciones.append(" ")
                 nicos.append(" ")
                 cantidad_comercial.append(" ")
                 cantidad_tarifa.append(" ")
+                unidades_medida.append(" ")
             contador = contador + 1
 
             documentos.append(documento)
+            array_tipo_movimento.append(tipo_movimiento_a1)
             fracciones.append(grupo)
             nicos.append(nico)
             cantidad_comercial.append(round(suma_campo10,3))
             cantidad_tarifa.append(round(suma_campo13,5))
+            unidades_medida.append(nombre_campo12)
 
 
 
@@ -195,14 +237,22 @@ def mostrar_diferencias(diferencias, grupos_restantes1, grupos_restantes2, grupo
                 suma_campo11 += float(campos[10])
                 suma_campo13 += float(campos[12])
                 campo_12 = campos[11]
+                for elemento in apendice7:
+                    if elemento["CLAVE"] == int(campo_12):
+                        nombre_campo12 = elemento["DESCRIPCION"]
+                #print(nombre_campo12)
+
+                
 
             
             
             documentos.append(documento)
+            array_tipo_movimento.append(tipo_movimiento_a2)
             fracciones.append(grupo)
             nicos.append(nico)
             cantidad_comercial.append(round(suma_campo10,3))
             cantidad_tarifa.append(round(suma_campo13,5))
+            unidades_medida.append(nombre_campo12)
 
             texto_diferencias.insert(
                 tk.END, f"Suma Cantidad UMC (Valor en Aduana): {round(suma_campo8,3)}\n")
@@ -245,23 +295,31 @@ def mostrar_diferencias(diferencias, grupos_restantes1, grupos_restantes2, grupo
                 suma_campo11_grupo1 += float(campos[10])
                 suma_campo13_grupo1 += float(campos[12])
                 campo_12 = campos[11]
+                for elemento in apendice7:
+                    if elemento["CLAVE"] == int(campo_12):
+                        nombre_campo12 = elemento["DESCRIPCION"]
+
 
             
             #fraccion = clave
             #print("Documento: ",documento,"Fraccion: ",clave,"Cantidad Comercial Archivo1: ",suma_campo10_grupo1)
             if contador2 == 0:
                 documentos.append("Diferencias") 
+                array_tipo_movimento.append(" ")
                 fracciones.append(" ")
                 nicos.append(" ")
                 cantidad_comercial.append(" ")
                 cantidad_tarifa.append(" ")
+                unidades_medida.append(" ")
             contador2 = contador2 + 1
 
             documentos.append(documento)
+            array_tipo_movimento.append(tipo_movimiento_a1)
             fracciones.append(clave)
             nicos.append(nico)
             cantidad_comercial.append(round(suma_campo10_grupo1,3))
             cantidad_tarifa.append(round(suma_campo13_grupo1,5))
+            unidades_medida.append(nombre_campo12)
             
 
             texto_diferencias.insert(
@@ -300,14 +358,21 @@ def mostrar_diferencias(diferencias, grupos_restantes1, grupos_restantes2, grupo
                 suma_campo11_grupo2 += float(campos[10]) #10 en el array, 11 en el txt - name : Suma cantida UMC
                 suma_campo13_grupo2 += float(campos[12])
                 campo_12 = campos[11]
+                for elemento in apendice7:
+                    if elemento["CLAVE"] == int(campo_12):
+                        nombre_campo12 = elemento["DESCRIPCION"]
+
+                
 
             #print("Documento: ",documento,"Fraccion: ",clave,"Cantidad Comercial Archivo2: ",suma_campo10_grupo2)
 
             documentos.append(documento)
+            array_tipo_movimento.append(tipo_movimiento_a2)
             fracciones.append(clave)
             nicos.append(nico)
             cantidad_comercial.append(round(suma_campo10_grupo2,3))
             cantidad_tarifa.append(round(suma_campo13_grupo2,5))
+            unidades_medida.append(nombre_campo12)
 
             texto_diferencias.insert(
                 tk.END, f"Suma Cantidad UMC (Valor en Aduana): {round(suma_campo8_grupo2,3)}\n")
@@ -344,15 +409,14 @@ def mostrar_diferencias(diferencias, grupos_restantes1, grupos_restantes2, grupo
         
     # Llamar a ambas funciones de búsqueda para resaltar al mismo tiempo
 
-    # Botón para mirar tabla|
-    btn_mirar_tabla = tk.Button(control_frame, text="Mirar Tabla", command=lambda: mostrar_tabla(documentos,fracciones,nicos,cantidad_comercial,cantidad_tarifa))
-    #btn_mirar_tabla = tk.Button(control_frame, text="Mirar Tabla")
-    btn_mirar_tabla.grid(row=1, column=5,padx=5, pady=5)
+    
+
+    
 
     buscar_texto(None)
     #buscar_simbolo()
     control_frame.grid_columnconfigure(0, weight=1)
-    control_frame.grid_columnconfigure(5, weight=1)
+    control_frame.grid_columnconfigure(6, weight=1)
 
     ventana.grid_rowconfigure(0, weight=1)
     ventana.grid_columnconfigure(0, weight=1)

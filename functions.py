@@ -78,11 +78,19 @@ def comparar_archivos(nombre1,nombre2,archivo1_log_frame,archivo2_log_frame):
             if linea.startswith('551'):
                 datos = linea.strip().split('|')
                 grupos1[datos[2]].append(linea.strip())
+            #Obtener el tipo de movimiento
+            if linea.startswith('501'):
+                datos501 = linea.strip().split('|')
+                tipo_movimiento_a1 = "IMP" if datos501[4] == "1" else "EXP"
 
         for linea in f2:
             if linea.startswith('551'):
                 datos = linea.strip().split('|')
                 grupos2[datos[2]].append(linea.strip())
+            #Obtener el tipo de movimiento
+            if linea.startswith('501'):
+                datos501 = linea.strip().split('|')
+                tipo_movimiento_a2 = "IMP" if datos501[4] == "1" else "EXP"
 
     diferencias = []
 
@@ -149,7 +157,7 @@ def comparar_archivos(nombre1,nombre2,archivo1_log_frame,archivo2_log_frame):
     display_history(archivo2_log_frame,HISTORY_FILE2)
     #--------------------------------------------------------------------
     mostrar_diferencias(diferencias, grupos_restantes1,
-                        grupos_restantes2, grupos1, grupos2)
+                        grupos_restantes2, grupos1, grupos2,tipo_movimiento_a1,tipo_movimiento_a2)
     
 
 def display_history(frame, history_file):
