@@ -4,6 +4,7 @@ from tkinter import filedialog, messagebox
 from show_diffs import mostrar_diferencias
 import customtkinter as ctk
 from CTkToolTip import *
+from CTkMessagebox import CTkMessagebox
 
 archivo1 = None
 archivo2 = None
@@ -15,15 +16,20 @@ nombre_archivo_anterior1 = ""
 archivo_anterior1 = ""
 
 
-def seleccionar_archivo1():
-    global archivo1, nombre_archivo_anterior1, archivo_anterior1
-    archivo1 = filedialog.askopenfilename(
+def seleccionar_archivo1(abrir,filepath):
+    global archivo1, nombre_archivo_anterior1, archivo_anterior1,nombre_archivo1
+    if abrir == "no":
+        #global nombre_archivo1
+        archivo1 = filepath
+        nombre_archivo1 = os.path.basename(filepath)
+        
+    else:
+        archivo1 = filedialog.askopenfilename(
         title="Seleccionar archivo 1", filetypes=(("Archivos de texto", "*"),))
+        #global nombre_archivo1
+        # Obtener el nombre del archivo
+        nombre_archivo1 = os.path.basename(archivo1)
     
-    # Obtener el nombre del archivo
-    global nombre_archivo1
-    nombre_archivo1 = os.path.basename(archivo1)
-
     if len(nombre_archivo1) > 40:
         messagebox.showerror("Error", "No puedes agregar archivos con nombre muy largos.")
         archivo1 = archivo_anterior1
@@ -35,20 +41,24 @@ def seleccionar_archivo1():
         else:
             nombre_archivo_anterior1 = nombre_archivo1
             archivo_anterior1 = archivo1
+            
             return archivo1,nombre_archivo1
 
 # Variable global para almacenar el nombre del archivo anterior
 nombre_archivo_anterior2 = ""
 archivo_anterior2 = ""
 
-def seleccionar_archivo2():
-    global archivo2,nombre_archivo_anterior2, archivo_anterior2
-    archivo2 = filedialog.askopenfilename(
-        title="Seleccionar archivo 2", filetypes=(("Archivos de texto", "*"),))
-    
-    # Obtener el nombre del archivo
-    global nombre_archivo2
-    nombre_archivo2 = os.path.basename(archivo2)
+def seleccionar_archivo2(abrir,filepath):
+    global archivo2,nombre_archivo_anterior2, archivo_anterior2,nombre_archivo2
+    if abrir == "no":
+        #global nombre_archivo1
+        archivo2 = filepath
+        nombre_archivo2 = os.path.basename(filepath)
+    else:
+
+        archivo2 = filedialog.askopenfilename(
+            title="Seleccionar archivo 2", filetypes=(("Archivos de texto", "*"),))
+        nombre_archivo2 = os.path.basename(archivo2)
 
     if len(nombre_archivo2) > 40:
         messagebox.showerror("Error", "No puedes agregar archivos con nombre muy largos.")
@@ -72,37 +82,40 @@ def comparar_archivos(nombre1,nombre2,archivo1_log_frame,archivo2_log_frame):
     global grupos1, grupos2
     grupos1 = defaultdict(list)
     grupos2 = defaultdict(list)
+    try:
+        with open(archivo1, 'r') as f1, open(archivo2, 'r') as f2:
+            for linea in f1:
+                if linea.startswith('551'):
+                    datos = linea.strip().split('|')
+                    grupos1[datos[2]].append(linea.strip())
+                #Obtener el tipo de movimiento
+                if linea.startswith('501'):
+                    datos501 = linea.strip().split('|')
+                    tipo_movimiento_a1 = "IMP" if datos501[4] == "1" else "EXP"
 
-    with open(archivo1, 'r') as f1, open(archivo2, 'r') as f2:
-        for linea in f1:
-            if linea.startswith('551'):
-                datos = linea.strip().split('|')
-                grupos1[datos[2]].append(linea.strip())
-            #Obtener el tipo de movimiento
-            if linea.startswith('501'):
-                datos501 = linea.strip().split('|')
-                tipo_movimiento_a1 = "IMP" if datos501[4] == "1" else "EXP"
+            for linea in f2:
+                if linea.startswith('551'):
+                    datos = linea.strip().split('|')
+                    grupos2[datos[2]].append(linea.strip())
+                #Obtener el tipo de movimiento
+                if linea.startswith('501'):
+                    datos501 = linea.strip().split('|')
+                    tipo_movimiento_a2 = "IMP" if datos501[4] == "1" else "EXP"
 
-        for linea in f2:
-            if linea.startswith('551'):
-                datos = linea.strip().split('|')
-                grupos2[datos[2]].append(linea.strip())
-            #Obtener el tipo de movimiento
-            if linea.startswith('501'):
-                datos501 = linea.strip().split('|')
-                tipo_movimiento_a2 = "IMP" if datos501[4] == "1" else "EXP"
-
-    diferencias = []
-
-    for clave in set(grupos1.keys()) | set(grupos2.keys()):
-        if clave in grupos1 and clave in grupos2:
-            if grupos1[clave] != grupos2[clave]:
-                diferencias.append((clave, grupos1[clave], grupos2[clave]))
-        elif clave in grupos1:
-            diferencias.append((clave, grupos1[clave], []))
-        else:
-            diferencias.append((clave, [], grupos2[clave])
-                               ) if clave in grupos2 else None
+        diferencias = []
+        
+        for clave in set(grupos1.keys()) | set(grupos2.keys()):
+            if clave in grupos1 and clave in grupos2:
+                if grupos1[clave] != grupos2[clave]:
+                    diferencias.append((clave, grupos1[clave], grupos2[clave]))
+            elif clave in grupos1:
+                diferencias.append((clave, grupos1[clave], []))
+            else:
+                diferencias.append((clave, [], grupos2[clave])
+                                ) if clave in grupos2 else None
+    except Exception as e:
+        CTkMessagebox(title="Error al comparar", message="Esta cargando mas de un archivo en cada entrada. O los archivos seleccionados no cumplen con el mismo formato para hacer la comparación.", icon="cancel")
+        
 
     grupos_restantes1 = [
         grupo for grupo in grupos1.keys() if grupo not in grupos2]

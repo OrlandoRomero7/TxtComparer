@@ -1,0 +1,17 @@
+Mostrar tabla
+cantidad comercial = Valor Dolares
+
+cantidad tarifa = cantidad Comercial
+
+
+12 - unidad de medida comercial
+14 - Unidad Medida Tarifa
+
+6-8
+
+
+9802
+
+partida 553
+ralacioada con el numer de pedimento y regla octava de acuerdo a la partida
+7- Número de permisos o autorizacion

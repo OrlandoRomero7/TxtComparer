@@ -4,6 +4,7 @@ from tkinter import filedialog, messagebox
 from PIL import Image
 from functions import seleccionar_archivo1, seleccionar_archivo2, comparar_archivos
 from CTkToolTip import *
+from tkinterdnd2 import DND_FILES, TkinterDnD
 #from tktooltip import ToolTip
 # --Create the main window------------------------------------------------------------------------------
 window = ctk.CTk()
@@ -23,12 +24,13 @@ window.grid_columnconfigure(0, weight=1)
 
 archivo1_filename = ""
 archivo2_filename = ""
-
+abrir = "yes"
+filepath = ""
 file1_tooltip = None
 
 def on_select_file1_button_pressed():
     global archivo1_filename,file1_tooltip
-    archivo1,nombre_archivo1 = seleccionar_archivo1()
+    archivo1,nombre_archivo1 = seleccionar_archivo1(abrir,filepath)
     archivo1_filename = nombre_archivo1
 
     """ if len(nombre_archivo1)>40:
@@ -57,7 +59,7 @@ file2_tooltip= None
 
 def on_select_file2_button_pressed():
     global archivo2_filename,nombre_archivo2,file2_tooltip
-    archivo2, nombre_archivo2 = seleccionar_archivo2()
+    archivo2, nombre_archivo2 = seleccionar_archivo2(abrir,filepath)
     archivo2_filename = nombre_archivo2
     # Usa el nombre del archivo para actualizar el texto del label
 
@@ -80,7 +82,54 @@ def on_select_file2_button_pressed():
     else:
         archivo2_cargado.configure(
             text="VACIO", text_color="#B7D47F", font=("Roboto", 12, "bold"))
-    
+###################################################################################################        
+def handle_drop(event):
+    global file1_tooltip
+    abrir = "no"
+    filepath = event.data.replace("{", "").replace("}", "")
+    archivo1,nombre_archivo1 = seleccionar_archivo1(abrir,filepath)
+    if file1_tooltip:
+        file1_tooltip.hide()
+
+    # Usa el nombre del archivo para actualizar el texto del label
+    if nombre_archivo1:
+        if len(nombre_archivo1)>12:
+            archivo1_cargado.configure(
+                text=nombre_archivo1[:12]+"...", text_color="#B7D47F", font=("Roboto", 12, "bold"))
+            
+            file1_tooltip = CTkToolTip(archivo1_cargado, message=nombre_archivo1)
+        else:
+            archivo1_cargado.configure(
+                text=nombre_archivo1, text_color="#B7D47F", font=("Roboto", 12, "bold"))
+    else:
+        archivo1_cargado.configure(
+            text="VACIO", text_color="#B7D47F", font=("Roboto", 12, "bold"))
+    #print(filepath)
+    abrir = "yes"
+
+def handle_drop2(event):
+    global file2_tooltip
+    abrir = "no"
+    filepath = event.data.replace("{", "").replace("}", "")
+    archivo1,nombre_archivo2 = seleccionar_archivo2(abrir,filepath)
+
+    if file2_tooltip:
+        file2_tooltip.hide()
+
+    if nombre_archivo2:
+        if len(nombre_archivo2)>12:
+            archivo2_cargado.configure(
+                text=nombre_archivo2[:12]+"...", text_color="#B7D47F", font=("Roboto", 12, "bold"))
+            
+            file2_tooltip = CTkToolTip(archivo2_cargado, message=nombre_archivo2)
+        else:
+            archivo2_cargado.configure(
+                text=nombre_archivo2, text_color="#B7D47F", font=("Roboto", 12, "bold"))
+    else:
+        archivo2_cargado.configure(
+            text="VACIO", text_color="#B7D47F", font=("Roboto", 12, "bold"))
+    abrir = "yes"
+###################################################################################################  
 # ------------------------------------------------------------------------------
 # Create two labels
 label1 = ctk.CTkLabel(frame, text="TXT", fg_color="#4D5057",
@@ -107,6 +156,9 @@ add_first_icon = ctk.CTkLabel(
     frame, image=converted_add_first_icon, text=None, fg_color="#4D5057")
 add_first_icon.grid(row=1, column=0, padx=(30, 0), pady=(115, 0))
 
+add_first_icon.drop_target_register(DND_FILES)
+add_first_icon.dnd_bind('<<Drop>>', handle_drop)
+
 # ----------------------------------------------------------------------------
 
 separator = ctk.CTkFrame(frame, width=115, height=2, fg_color="#787c7f")
@@ -124,6 +176,9 @@ converted_add_second_icon = ctk.CTkImage(
 add_second_icon = ctk.CTkLabel(
     frame, image=converted_add_second_icon, text=None, fg_color="#4D5057")
 add_second_icon.grid(row=1, column=2, pady=(115, 0))
+
+add_second_icon.drop_target_register(DND_FILES)
+add_second_icon.dnd_bind('<<Drop>>', handle_drop2)
 
 # ----------------------------------------------------------------------------
 
@@ -174,6 +229,7 @@ archivo2_log_frame.grid(row=1, column=3, sticky="nsew", padx=(150, 0), pady=1)
 
 
 ####################### Botones #################################
+
 # ----------------------------------------------------------------------------
 
 select_file1_button = ctk.CTkButton(frame, text="Archivo 1", command=on_select_file1_button_pressed,
@@ -192,12 +248,15 @@ compare_button = ctk.CTkButton(frame, text="Comparar", command=lambda: comparar_
                                bg_color="#4D5057", corner_radius=7, font=("Segoe UI", 15), width=114)
 compare_button.grid(row=2, column=4, padx=(0, 20), pady=(50, 0))
 
+
 #################### Indicador archivos cargados #####################################
 
 # 
 archivo1_cargado = ctk.CTkLabel(
     frame, text="VACIO", text_color="#B7D47F", font=("Roboto", 12, "bold"))
 archivo1_cargado.grid(row=3, column=0, padx=(30, 0), pady=(10, 0))
+
+
 
 archivo2_cargado = ctk.CTkLabel(
     frame, text="VACIO", text_color="#B7D47F", font=("Roboto", 12, "bold"))

@@ -105,7 +105,7 @@ def mostrar_diferencias(diferencias, grupos_restantes1, grupos_restantes2, grupo
 
     # Botón para mirar tabla|
     btn_mirar_tabla = tk.Button(control_frame, text="Mirar Tabla", command=lambda: mostrar_tabla(documentos,fracciones,
-                                                                                                 nicos,cantidad_comercial,cantidad_tarifa,array_tipo_movimento, unidades_medida))
+                                                                                                 nicos,valor_dolares,cantidad_comercial,array_tipo_movimento, uds_medida_com,uds_medida_tar))
     btn_mirar_tabla.grid(row=1, column=5,padx=5, pady=5)
 
     apendice7 = [
@@ -141,12 +141,13 @@ def mostrar_diferencias(diferencias, grupos_restantes1, grupos_restantes2, grupo
     documentos = []
     fracciones = []
     nicos = []
+    valor_dolares = []
     cantidad_comercial = []
-    cantidad_tarifa = []
     contador = 0
     contador2 = 0
     array_tipo_movimento = []
-    unidades_medida = []
+    uds_medida_com = []
+    uds_medida_tar = []
     nombre_campo12 = ""
 
     # Mostrar los grupos restantes del archivo 1
@@ -176,6 +177,7 @@ def mostrar_diferencias(diferencias, grupos_restantes1, grupos_restantes2, grupo
                 for elemento in apendice7:
                     if elemento["CLAVE"] == int(campo_12):
                         nombre_campo12 = elemento["DESCRIPCION"]
+                medida_tar = str(campos[13])
                 #print(nombre_campo12)
                 
 
@@ -185,18 +187,20 @@ def mostrar_diferencias(diferencias, grupos_restantes1, grupos_restantes2, grupo
                 array_tipo_movimento.append(" ")
                 fracciones.append(" ")
                 nicos.append(" ")
+                valor_dolares.append(" ")
                 cantidad_comercial.append(" ")
-                cantidad_tarifa.append(" ")
-                unidades_medida.append(" ")
+                uds_medida_com.append(" ")
+                uds_medida_tar.append(" ")
             contador = contador + 1
 
             documentos.append(documento)
             array_tipo_movimento.append(tipo_movimiento_a1)
             fracciones.append(grupo)
             nicos.append(nico)
-            cantidad_comercial.append(round(suma_campo10,3))
-            cantidad_tarifa.append(round(suma_campo13,5))
-            unidades_medida.append(nombre_campo12)
+            valor_dolares.append(round(suma_campo10,3))
+            cantidad_comercial.append(round(suma_campo13,5))
+            uds_medida_com.append(nombre_campo12)
+            uds_medida_tar.append(medida_tar)
 
 
 
@@ -241,6 +245,7 @@ def mostrar_diferencias(diferencias, grupos_restantes1, grupos_restantes2, grupo
                     if elemento["CLAVE"] == int(campo_12):
                         nombre_campo12 = elemento["DESCRIPCION"]
                 #print(nombre_campo12)
+                medida_tar = str(campos[13])
 
                 
 
@@ -250,9 +255,10 @@ def mostrar_diferencias(diferencias, grupos_restantes1, grupos_restantes2, grupo
             array_tipo_movimento.append(tipo_movimiento_a2)
             fracciones.append(grupo)
             nicos.append(nico)
-            cantidad_comercial.append(round(suma_campo10,3))
-            cantidad_tarifa.append(round(suma_campo13,5))
-            unidades_medida.append(nombre_campo12)
+            valor_dolares.append(round(suma_campo10,3))
+            cantidad_comercial.append(round(suma_campo13,5))
+            uds_medida_com.append(nombre_campo12)
+            uds_medida_tar.append(medida_tar)
 
             texto_diferencias.insert(
                 tk.END, f"Suma Cantidad UMC (Valor en Aduana): {round(suma_campo8,3)}\n")
@@ -298,6 +304,7 @@ def mostrar_diferencias(diferencias, grupos_restantes1, grupos_restantes2, grupo
                 for elemento in apendice7:
                     if elemento["CLAVE"] == int(campo_12):
                         nombre_campo12 = elemento["DESCRIPCION"]
+                medida_tar = str(campos[13])
 
 
             
@@ -308,18 +315,20 @@ def mostrar_diferencias(diferencias, grupos_restantes1, grupos_restantes2, grupo
                 array_tipo_movimento.append(" ")
                 fracciones.append(" ")
                 nicos.append(" ")
+                valor_dolares.append(" ")
                 cantidad_comercial.append(" ")
-                cantidad_tarifa.append(" ")
-                unidades_medida.append(" ")
+                uds_medida_com.append(" ")
+                uds_medida_tar.append(" ")
             contador2 = contador2 + 1
 
             documentos.append(documento)
             array_tipo_movimento.append(tipo_movimiento_a1)
             fracciones.append(clave)
             nicos.append(nico)
-            cantidad_comercial.append(round(suma_campo10_grupo1,3))
-            cantidad_tarifa.append(round(suma_campo13_grupo1,5))
-            unidades_medida.append(nombre_campo12)
+            valor_dolares.append(round(suma_campo10_grupo1,3))
+            cantidad_comercial.append(round(suma_campo13_grupo1,5))
+            uds_medida_com.append(nombre_campo12)
+            uds_medida_tar.append(medida_tar)
             
 
             texto_diferencias.insert(
@@ -361,7 +370,7 @@ def mostrar_diferencias(diferencias, grupos_restantes1, grupos_restantes2, grupo
                 for elemento in apendice7:
                     if elemento["CLAVE"] == int(campo_12):
                         nombre_campo12 = elemento["DESCRIPCION"]
-
+                medida_tar = str(campos[13])
                 
 
             #print("Documento: ",documento,"Fraccion: ",clave,"Cantidad Comercial Archivo2: ",suma_campo10_grupo2)
@@ -370,9 +379,11 @@ def mostrar_diferencias(diferencias, grupos_restantes1, grupos_restantes2, grupo
             array_tipo_movimento.append(tipo_movimiento_a2)
             fracciones.append(clave)
             nicos.append(nico)
-            cantidad_comercial.append(round(suma_campo10_grupo2,3))
-            cantidad_tarifa.append(round(suma_campo13_grupo2,5))
-            unidades_medida.append(nombre_campo12)
+            valor_dolares.append(round(suma_campo10_grupo2,3))
+            cantidad_comercial.append(round(suma_campo13_grupo2,5))
+            uds_medida_com.append(nombre_campo12)
+            uds_medida_tar.append(medida_tar)
+            
 
             texto_diferencias.insert(
                 tk.END, f"Suma Cantidad UMC (Valor en Aduana): {round(suma_campo8_grupo2,3)}\n")

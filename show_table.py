@@ -5,7 +5,7 @@ from tkinter import filedialog
 
 
 
-def mostrar_tabla(documentos,fracciones,nicos,cantidad_comercial,cantidad_tarifa,array_tipo_movimiento,unidades_medida):
+def mostrar_tabla(documentos,fracciones,nicos,valor_dolares,cantidad_comercial,array_tipo_movimiento,unidades_medida_com,uds_medida_tar):
     
     def export_data():
         # Abre un cuadro de diálogo para que el usuario elija la ubicación y el nombre del archivo
@@ -24,10 +24,28 @@ def mostrar_tabla(documentos,fracciones,nicos,cantidad_comercial,cantidad_tarifa
     'Tipo Movimiento': array_tipo_movimiento,
     'Fraccion': fracciones,
     'Nico': nicos,
+    'Valor Dolares': valor_dolares,
     'Cantidad Comercial': cantidad_comercial,
-    'Cantidad Tarifa': cantidad_tarifa,
-    'Unidad Medida': unidades_medida
+    'Unidad Medida Comercial': unidades_medida_com,
+    'Unidad Medida Tarifa': uds_medida_tar
     })
+
+    # Ajustar el ancho de las columnas en el DataFrame
+    # Puedes ajustar los valores de ancho como desees
+    column_widths = {'Documento': 10,
+                     'Tipo Movimiento': 10,
+                     'Fraccion': 10,
+                     'Nico': 5,
+                     'Valor Dolares': 10,
+                     'Cantidad Comercial': 10,
+                     'Unidad Medida Comercial': 15,
+                     'Unidad Medida Tarifa': 15
+                     
+                     
+                     }
+
+    for column, width in column_widths.items():
+        df[column] = df[column].apply(lambda x: f'{{:<{width}}}'.format(x))
 
     root = tk.Toplevel()
     root.title('Tabla')
@@ -37,6 +55,8 @@ def mostrar_tabla(documentos,fracciones,nicos,cantidad_comercial,cantidad_tarifa
     frame.pack(fill='both',expand=True)
 
     pt = Table(frame, dataframe=df)
+
+    
     pt.show()
     
     #pt.setRowColors(rows=0, clr='red', cols='all')
